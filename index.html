@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simule sua Próxima Viagem</title>
+    <!-- Incluindo o Tailwind CSS para um design moderno -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Usando a fonte Inter para um visual mais agradável */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+
+    <div class="w-full max-w-lg mx-auto bg-whiate rounded-xl shadow-lg p-8 m-4">
+        
+        <div class="mb-6 text-center">
+            <h1 class="text-2xl font-bold text-gray-800">Planeje sua Viagem dos Sonhos</h1>
+            <p class="text-gray-500 mt-1">Preencha os dados abaixo e fale com um especialista no WhatsApp!</p>
+        </div>
+
+        <!-- Formulário de coleta de dados do cliente -->
+        <form id="customerForm" class="space-y-6">
+
+            <div>
+                <label for="nome_cliente" class="block text-sm font-medium text-gray-700">Seu Nome</label>
+                <input type="text" id="nome_cliente" name="nome_cliente" placeholder="Como podemos te chamar?" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+
+            <div>
+                <label for="origem" class="block text-sm font-medium text-gray-700">Cidade de Origem</label>
+                <input list="cidades" id="origem" name="origem" placeholder="De onde você está saindo?" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <!-- DataList com sugestões de cidades para evitar erros de digitação -->
+                <datalist id="cidades">
+                    <option value="São Paulo - SP">
+                    <option value="Rio de Janeiro - RJ">
+                    <option value="Belo Horizonte - MG">
+                    <option value="Salvador - BA">
+                    <option value="Brasília - DF">
+                    <option value="Curitiba - PR">
+                    <option value="Recife - PE">
+                    <option value="Porto Alegre - RS">
+                    <option value="Fortaleza - CE">
+                </datalist>
+            </div>
+            
+            <div>
+                <label for="destino" class="block text-sm font-medium text-gray-700">Destino Desejado</label>
+                <input type="text" id="destino" name="destino" placeholder="Para onde você quer ir?" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+
+            <div>
+                <label for="data_viagem" class="block text-sm font-medium text-gray-700">Data Pretendida da Viagem</glabel>
+                <input type="date" id="data_viagem" name="data_viagem" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+
+            <div>
+                <label for="interesse" class="block text-sm font-medium text-gray-700">Qual seu interesse?</label>
+                <select id="interesse" name="interesse" required class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                    <option value="Gostaria de verificar o preço">Gostaria de verificar o preço</option>
+                    <option value="Tenho interesse em comprar agora">Tenho interesse em comprar agora</option>
+                </select>
+            </div>
+
+            <div>
+                <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
+                    Simular no WhatsApp
+                </button>
+            </div>
+        </form>
+
+    </div>
+
+    <!-- Script para formatar e redirecionar para o WhatsApp -->
+    <script>
+        // --- PASSO IMPORTANTE: CONFIGURE SEU WHATSAPP AQUI ---
+        const seuNumeroWhatsApp = "5511999998888"; // <-- MUITO IMPORTANTE: Coloque o número do WhatsApp da sua empresa aqui, com código do país e DDD.
+        // --- FIM DA CONFIGURAÇÃO ---
+
+        const customerForm = document.getElementById('customerForm');
+
+        customerForm.addEventListener('submit', (e) => {
+            e.preventDefault(); // Impede o envio padrão do formulário
+
+            // Coleta os dados do formulário
+            const nome = document.getElementById('nome_cliente').value;
+            const origem = document.getElementById('origem').value;
+            const destino = document.getElementById('destino').value;
+            const dataISO = document.getElementById('data_viagem').value;
+            const interesse = document.getElementById('interesse').value;
+            
+            // Formata a data para o padrão brasileiro (DD/MM/AAAA) para melhor leitura
+            const [ano, mes, dia] = dataISO.split('-');
+            const dataFormatada = `${dia}/${mes}/${ano}`;
+
+            // Cria a mensagem pré-preenchida
+            const mensagem = `Olá! Gostaria de uma cotação para uma viagem.
+            
+*Meu Nome:* ${nome}
+*Origem:* ${origem}
+*Destino:* ${destino}
+*Data:* ${dataFormatada}
+*Interesse:* ${interesse}`;
+
+            // Codifica a mensagem para ser usada em uma URL
+            const mensagemCodificada = encodeURIComponent(mensagem);
+
+            // Cria a URL final do WhatsApp
+            const urlWhatsApp = `https://api.whatsapp.com/send?phone=5571981919717$text=${mensagemCodificada}`;
+
+            // Redireciona o usuário para o WhatsApp
+            window.location.href = urlWhatsApp;
+        });
+    </script>
+
+</body>
+</html>
